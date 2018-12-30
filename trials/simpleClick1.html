@@ -1,12 +1,23 @@
+<!DOCTYPE html>
 <html>
 
 <head>
-	<meta charset="utf-8"/>
+	<meta charset="utf-8">
 	<meta name="keywords" content="idle, clicker">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<!-- link rel="stylesheet" type="text/css" href="/css/main.css" / -->
-	<style></style>
+	<style>
+		html, body {
+			height: 100%;
+		}
+		div { 
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, 0%);
+		}
+	</style>
 
 	<noscript>Your browser does not support JavaScript!</noscript>
 	<!-- script type="text/javascript" src="/js/main.js"></script -->
@@ -15,16 +26,44 @@
 </head>
 
 <body>
-	<button onclick="btnClick()">Click Me!</button>
-	<br />
-	Clicks: <span id="numClick">0</span>
-	<br />
-
+	<div class="class" id="id">
+		<br />
+		<button onclick="btnClick(1)">Click Me!</button>
+		<br />
+		Clicks: <span id="numClick">0</span>
+		<br />
+		<br />
+		<button onclick="btnAuto()">Buy AutoClicker!</button>
+		<br />
+		Clicks: <span id="numAuto">0</span>
+		<br />
+		Cost: <span id="autoCost">10</span>
+		<br />
+	</div>
 	<script>
-		function btnClick() {
-			let currNum = document.getElementById("numClick").innerHTML;
-			document.getElementById("numClick").innerHTML = Number(currNum)+1;
+		var numClick = 0;
+		var numAuto = 0;
+		
+		function btnClick(num) {
+			numClick += num;
+			document.getElementById("numClick").innerHTML = numClick;
 		}
+		
+		function btnAuto() {
+			let autoCost = Math.floor(10 * Math.pow(1.5, numAuto));
+			if(numClick >= autoCost){
+				numAuto += 1;
+				numClick -= autoCost;
+				document.getElementById('numAuto').innerHTML = numAuto;
+				document.getElementById('numClick').innerHTML = numClick;
+			};
+			let nextCost = Math.floor(10 * Math.pow(1.5, numAuto));
+			document.getElementById('autoCost').innerHTML = nextCost;
+		};
+		
+		window.setInterval(function() {
+			btnClick(numAuto);
+		}, 1000);
 	</script>
 </body>
 
