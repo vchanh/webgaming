@@ -11,17 +11,30 @@
 		html, body {
 			height: 100%;
 		}
-		div { 
+		button {
+		}
+		h3 {
+			top: 50%;
+			padding: 5px;
+			transform: translate(0%, -50%);
+		}
+		.section {
+		}
+		#centerbox { 
 			position: fixed;
 			top: 50%;
 			left: 50%;
 			transform: translate(-50%, 0%);
 		}
-		button {
-		}
-		.section {
-		}
 		#btnClick {
+		}
+		#navbar {
+			position: fixed;
+			top: 0px;
+			left: 0px;
+			width: 100%;
+			height: 36px;
+			background-color: #e0e0e0;
 		}
 	</style>
 
@@ -32,43 +45,68 @@
 </head>
 
 <body>
-	<div>
+	<div id="navbar">
+		<div>
+			<h3>Simple Click</h3>
+		</div>
+	</div>
+	<div id="centerbox">
 		<br />
 		<button onclick="btnClick(1)">Click Me!</button>
 		<br />
-		Clicks: <span id="resource1">0</span>
+		Clicks: <span id="res1">0</span>
 		<br />
 		<br />
 		<button onclick="buyGen1()">Buy AutoClicker!</button>
 		<br />
-		Clickers: <span id="generator1">0</span>
+		Clicks: <span id="gen1">0</span>
 		<br />
-		Cost: <span id="generator1cost">10</span>
+		Cost: <span id="gen1cost">10</span>
 		<br />
 	</div>
 	<script>
-		var game = {};
-		game.clicks = 0;
-		game.clickers = 0;
+		var game = {
+			clicks: 0,
+			clickers: 0,
+			//numSaves: 0,
+			timePlayed: 0,
+			//numPrestige: 0,
+			isPaused: 0
+		};
 		
 		function save(saveObj) {
-			//localStorage
-			sessionStorage.setItem("simpleclick1", JSON.stringify(saveObj));
+			try {
+				//game.dateLastSaved = Date.now(); //toString(16);
+				sessionStorage.setItem("simpleclick1", JSON.stringify(saveObj)); 
+				//game.numSaves++;
+			}
+			catch(error) { 
+				console.error(error); 
+			}
 		}
 		
 		function load() {
-			let savedObj = JSON.parse(sessionStorage.getItem("simpleclick1"));
-			game = savedObj;
+			let oldSave = JSON.parse(JSON.stringify(game));
+			let newSave = JSON.parse(sessionStorage.getItem("simpleclick1"));
+			//versionCheck();
+			for (let i in newSave) {
+				if (typeof i !== "undefined")
+					game[i] = newSave[i];
+			}
+		}
+		
+		function deletelocalStorage() {
+			localStorage.removeItem("simpleclick1");
 		}
 		
 		function btnClick(num) {
 			game.clicks += num;
-			document.getElementById("resource1").innerHTML = game.clicks;
+			document.getElementById("res1").innerHTML = game.clicks;
 		}
 		
 		function btnClick(num) {
 			game.clicks += num;
-			document.getElementById("resource1").innerHTML = game.clicks;
+			document.getElementById("res1").innerHTML = game.clicks;
 		}
 		
 		function buyGen1() {
@@ -76,15 +114,19 @@
 			if(game.clicks >= autoCost){
 				game.clickers += 1;
 				game.clicks -= autoCost;
-				document.getElementById('generator1').innerHTML = game.clickers;
-				document.getElementById('resource1').innerHTML = game.clicks;
+				document.getElementById('gen1').innerHTML = game.clickers;
+				document.getElementById('res1').innerHTML = game.clicks;
 			};
 			let nextCost = Math.floor(10 * Math.pow(1.5, game.clickers));
-			document.getElementById('generator1cost').innerHTML = nextCost;
+			document.getElementById('gen1cost').innerHTML = nextCost;
 		};
 		
+		window.onload - function() {
+			//load();
+		}
 		window.setInterval(function() {
 			btnClick(game.clickers);
+			//game.timePlayed++;
 		}, 1000);
 	</script>
 </body>
