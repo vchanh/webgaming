@@ -56,29 +56,40 @@
 		<br />
 		Clicks: <span id="res1">0</span>
 		<br />
+		Clicks/sec: <span id="income">0</span>
 		<br />
-		<button onclick="buyGen1()">Buy AutoClicker!</button>
 		<br />
-		Clicks: <span id="gen1">0</span>
+		<button onclick="buyGen1()">Buy AutoClicker, Cost: <span id="gen1cost">10</span></button>
 		<br />
-		Cost: <span id="gen1cost">10</span>
+		<button onclick="buyGen2()">Buy AutoSmasher, Cost: <span id="gen2cost">60</span></button>
+		<br />
+		<button onclick="buyGen3()">Buy AutoAutoClicker, Cost: <span id="gen3cost">20</span></button>
 		<br />
 	</div>
 	<script>
 		var game = {
 			clicks: 0,
-			clickers: 0,
-			//numSaves: 0,
+			clicker1: 0,
+			clicker2: 0,
+			clicker3: 0,
+			numSaves: 0,
 			timePlayed: 0,
 			//numPrestige: 0,
-			isPaused: 0
+			settings: {
+				speed: 0, //0-3: paused, norm, 2x..
+				buyAmount: 0, //0-3, Math.pow(10,x): 1, 10, 100, 1000..
+				autosave: 0, //0-6, 5x: 5min, 10min, 15min..
+			}
 		};
+		
+		function update() {
+		}
 		
 		function save(saveObj) {
 			try {
-				//game.dateLastSaved = Date.now(); //toString(16);
+				game.dateLastSaved = Date.now(); //toString(16);
 				sessionStorage.setItem("simpleclick1", JSON.stringify(saveObj)); 
-				//game.numSaves++;
+				game.numSaves++;
 			}
 			catch(error) { 
 				console.error(error); 
@@ -103,31 +114,54 @@
 			game.clicks += num;
 			document.getElementById("res1").innerHTML = game.clicks;
 		}
-		
-		function btnClick(num) {
-			game.clicks += num;
-			document.getElementById("res1").innerHTML = game.clicks;
-		}
-		
-		function buyGen1() {
-			let autoCost = Math.floor(10 * Math.pow(1.5, game.clickers));
+				
+		function buyGen1() { //+1 res1
+			let autoCost = Math.floor(10 * Math.pow(1.5, game.clicker1));
 			if(game.clicks >= autoCost){
-				game.clickers += 1;
+				game.clicker1 += 1;
 				game.clicks -= autoCost;
-				document.getElementById('gen1').innerHTML = game.clickers;
+				//document.getElementById('gen1').innerHTML = game.clicker1;
 				document.getElementById('res1').innerHTML = game.clicks;
 			};
-			let nextCost = Math.floor(10 * Math.pow(1.5, game.clickers));
+			let nextCost = Math.floor(10 * Math.pow(1.5, game.clicker1));
 			document.getElementById('gen1cost').innerHTML = nextCost;
+		};
+		
+		function buyGen2() { //+5 res1 over 5sec
+			let autoCost = Math.floor(60 * Math.pow(1.5, game.clicker2)); //redo!
+			if(game.clicks >= autoCost){
+				game.clicker2 += 1;
+				game.clicks -= autoCost;
+				document.getElementById('res1').innerHTML = game.clicks;
+			};
+			let nextCost = Math.floor(60 * Math.pow(1.5, game.clicker2)); //redo!
+			document.getElementById('gen2cost').innerHTML = nextCost;
+		};
+		
+		function buyGen3() { //+1 gen1 over 10sec
+			let autoCost = Math.floor(20 * Math.pow(2, game.clicker3)); //redo!
+			if(game.clicker1 >= autoCost){
+				game.clicker3 += 1;
+				game.clicker1 -= autoCost;
+			};
+			let nextCost = Math.floor(20 * Math.pow(2, game.clicker3)); //redo!
+			document.getElementById('gen3cost').innerHTML = nextCost;
 		};
 		
 		window.onload - function() {
 			//load();
 		}
-		window.setInterval(function() {
-			btnClick(game.clickers);
-			//game.timePlayed++;
+		
+		window.setInterval(function() { //redo!
+			btnClick(game.clicker1);
+			//game.timePlayed++;			
 		}, 1000);
+		window.setInterval(function() { //redo!
+			btnClick(game.clicker2 * 5);
+		}, 5000);
+		window.setInterval(function() { //redo!
+			game.clicker1++;
+		}, 10000);
 	</script>
 </body>
 
